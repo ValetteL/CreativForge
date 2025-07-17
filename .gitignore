@@ -1,0 +1,40 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.log
+*.vs/
+*.vscode/
+*.db
+*.db-journal
+
+# ASP.NET
+wwwroot/lib/
+wwwroot/dist/
+node_modules/
+
+# Rider / VSCode / VS
+.idea/
+.vscode/
+*.csproj.user
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# Publish output
+publish/
+out/
+
+# Docker
+docker-compose.override.yml
+.env
+.env.*
+
+# Optional test results
+TestResults/
+*.coverage
+*.coverlet.*

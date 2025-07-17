@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>CreativForge</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>🎲 CreativForge</h1>
+  <button onclick="generatePrompt()">Générer une idée</button>
+  <div id="result"></div>
+
+  <script src="script.js"></script>
+
+  <h2>Export PDF</h2>
+  <button onclick="downloadBrief()">Download Brief PDF</button>
+  <button onclick="downloadPlan()">Download Project Plan PDF</button>
+
+  <script>
+  function downloadBrief() {
+      window.open('/api/export/brief/pdf', '_blank');
+  }
+
+  function downloadPlan() {
+      const projectName = prompt("Enter project name:", "My Creative Project");
+      if (projectName) {
+          window.open(`/api/export/plan/pdf?name=${encodeURIComponent(projectName)}`, '_blank');
+      }
+  }
+  </script>
+</body>
+</html>
