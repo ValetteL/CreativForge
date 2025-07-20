@@ -1,19 +1,56 @@
-using CreativForge.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
+using CreativForge.Data;
 using CreativForge.Services;
 using CreativForge.Pdf;
+using System.Security.Claims;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Register custom services
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite("Data Source=creativforge.db"));
+
 builder.Services.AddSingleton<PromptService>();
 builder.Services.AddSingleton<BriefService>();
 builder.Services.AddSingleton<PlannerService>();
 builder.Services.AddSingleton<PdfExporter>();
+builder.Services.AddSingleton<TokenService>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials());
+});
+
+// Auth JWT
+var jwtSecret = builder.Configuration["Jwt:Secret"];
+var key = Encoding.ASCII.GetBytes(jwtSecret);
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            NameClaimType = ClaimTypes.Email, // Use email as the unique identifier
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -23,11 +60,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Serve static files from wwwroot/
-app.UseDefaultFiles();  // sert automatiquement index.html à la racine
+app.UseCors("AllowFrontend");
+app.UseDefaultFiles();
 app.UseStaticFiles();
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 app.Run();

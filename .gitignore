@@ -1,40 +1,39 @@
-# .NET
+# --- .gitignore pour projet ASP.NET + React ---
+
+# Binaires et dossiers build .NET
 bin/
 obj/
 *.user
 *.suo
 *.cache
-*.log
 *.vs/
-*.vscode/
-*.db
-*.db-journal
-
-# ASP.NET
-wwwroot/lib/
-wwwroot/dist/
-node_modules/
-
-# Rider / VSCode / VS
-.idea/
 .vscode/
-*.csproj.user
-*.userosscache
-*.sln.docstates
+*.db
+*.sqlite
+
+# Configuration locale
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.local.json
+appsettings.json
+.env
+.env.*
+frontend/.env
+frontend/.env.*
+
+
+# Node / React build
+node_modules/
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+frontend/.env
+frontend/.env.*
+
+# Fichiers système
+.DS_Store
+Thumbs.db
 
 # Logs
 *.log
-
-# Publish output
-publish/
-out/
-
-# Docker
-docker-compose.override.yml
-.env
-.env.*
-
-# Optional test results
-TestResults/
-*.coverage
-*.coverlet.*
+logs/

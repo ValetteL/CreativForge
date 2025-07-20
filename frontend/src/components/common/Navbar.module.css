@@ -1,0 +1,50 @@
+.navbar {
+  background: var(--color-navbar);
+  color: var(--color-text);
+  padding: 1em 1.5em;
+  border-bottom: 1.5px solid var(--color-accent);
+  box-shadow: 0 2px 8px #000a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.link {
+  color: var(--color-accent);
+  margin-right: 24px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.18s;
+}
+.link:last-child {
+  margin-right: 0;
+}
+.link:hover {
+  color: var(--color-accent-alt);
+}
+
+.right {
+  float: right;
+}
+
+.email {
+  margin-right: 16px;
+  color: var(--color-text-muted);
+}
+
+.button {
+  background: var(--color-button);
+  color: var(--color-text);
+  border: 1.5px solid var(--color-input-border);
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  padding: 9px 18px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.button:focus,
+.button:hover {
+  background: var(--color-button-hover);
+  color: #fff;
+}

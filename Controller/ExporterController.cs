@@ -2,6 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using CreativForge.Pdf;
 using CreativForge.Services;
 using CreativForge.Models;
+using CreativForge.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CreativForge.Controllers
 {
@@ -10,31 +14,44 @@ namespace CreativForge.Controllers
     public class ExportController : ControllerBase
     {
         private readonly PdfExporter _exporter;
-        private readonly BriefService _briefService;
+        private readonly AppDbContext _db;
         private readonly PlannerService _plannerService;
 
-        public ExportController(PdfExporter exporter, BriefService brief, PlannerService planner)
+        public ExportController(PdfExporter exporter, AppDbContext db, PlannerService planner)
         {
             _exporter = exporter;
-            _briefService = brief;
+            _db = db;
             _plannerService = planner;
         }
 
-        [HttpGet("brief/pdf")]
-        public IActionResult GetBriefPdf()
+        [Authorize]
+        [HttpGet("brief/pdf/{id}")]
+        public async Task<IActionResult> GetBriefPdf(int id)
         {
-            var prompt = new PromptService().GeneratePrompt();
-            var brief = _briefService.CreateBriefFromPrompt(prompt);
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var brief = await _db.Briefs.FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
+            if (brief == null) return NotFound("Brief not found or not yours");
+
             var pdfBytes = _exporter.ExportBriefToPdf(brief);
-            return File(pdfBytes, "application/pdf", "creative-brief.pdf");
+            var filename = $"creative-brief-{brief.Id}.pdf";
+            return File(pdfBytes, "application/pdf", filename);
         }
 
-        [HttpGet("plan/pdf")]
-        public IActionResult GetPlanPdf(string name = "My Project")
+        [Authorize]
+        [HttpGet("plan/pdf/{briefId}")]
+        public async Task<IActionResult> GetPlanPdf(int briefId)
         {
-            var plan = _plannerService.GeneratePlan(name);
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var brief = await _db.Briefs.FirstOrDefaultAsync(b => b.Id == briefId && b.UserId == userId);
+            if (brief == null) return NotFound("Brief not found or not yours");
+
+            // Ici, tu peux choisir comment générer le plan (par exemple à partir du titre du brief)
+            var plan = _plannerService.GeneratePlan(brief.Title ?? "My Project");
             var pdfBytes = _exporter.ExportPlanToPdf(plan);
-            return File(pdfBytes, "application/pdf", "project-plan.pdf");
+            var filename = $"project-plan-{brief.Id}.pdf";
+            return File(pdfBytes, "application/pdf", filename);
         }
     }
 }
