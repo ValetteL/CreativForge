@@ -1,0 +1,40 @@
+@import "./styles/variables.css";
+
+/* Reset */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
+}
+
+/* Links */
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover {
+  color: var(--color-accent-alt);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-card);
+  border-radius: 8px;
+}
+
+/* Toasts (react-hot-toast) */
+.toast-success {
+  background: var(--color-accent);
+  color: #fff;
+}
+.toast-error {
+  background: #ff5555;
+  color: #fff;
+}

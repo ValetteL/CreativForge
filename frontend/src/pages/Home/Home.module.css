@@ -1,0 +1,26 @@
+.page {
+  max-width: 600px;
+  margin: var(--spacing-lg) auto;
+  text-align: center;
+}
+
+.title {
+  font-size: var(--font-size-title);
+  color: var(--color-accent);
+  margin-bottom: var(--spacing-md);
+}
+
+.desc {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+}
+
+.cta {
+  color: var(--color-accent);
+  font-weight: 600;
+  margin: 0 7px;
+  text-decoration: underline;
+}
+.cta:hover {
+  color: var(--color-accent-alt);
+}

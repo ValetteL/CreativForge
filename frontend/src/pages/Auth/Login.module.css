@@ -1,0 +1,27 @@
+.page {
+  max-width: 400px;
+  margin: 70px auto 0 auto;
+  text-align: center;
+  background: var(--color-card);
+  padding: 35px 30px 25px 30px;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 2px 14px #0003;
+}
+
+.title {
+  color: var(--color-accent);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-title);
+  font-weight: 700;
+}
+
+.loading {
+  color: var(--color-accent);
+  margin-bottom: 12px;
+}
+
+.error {
+  color: #ff5555;
+  margin-bottom: 12px;
+  font-weight: 500;
+}

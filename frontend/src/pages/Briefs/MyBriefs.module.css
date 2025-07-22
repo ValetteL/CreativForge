@@ -1,0 +1,23 @@
+.container {
+  max-width: 700px;
+  margin: 40px auto;
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 32px;
+}
+
+.loading,
+.error,
+.message {
+  margin: 32px 0;
+  color: var(--color-accent);
+  text-align: center;
+  font-size: 1.1em;
+}
+
+.list {
+  display: grid;
+  gap: 18px;
+  margin-top: 28px;
+}

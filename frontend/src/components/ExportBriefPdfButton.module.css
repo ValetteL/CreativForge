@@ -1,0 +1,18 @@
+.button {
+  background: var(--color-button);
+  color: var(--color-accent);
+  border: 1.5px solid var(--color-input-border);
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  padding: 9px 18px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  margin-top: 12px;
+}
+
+.button:focus,
+.button:hover {
+  background: var(--color-button-hover);
+  color: #fff;
+}
