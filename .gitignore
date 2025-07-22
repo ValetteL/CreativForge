@@ -17,9 +17,7 @@ appsettings.Local.json
 appsettings.*.local.json
 appsettings.json
 .env
-.env.*
 frontend/.env
-frontend/.env.*
 
 
 # Node / React build
@@ -27,11 +25,6 @@ node_modules/
 frontend/node_modules/
 frontend/build/
 frontend/dist/
-<<<<<<< HEAD
-=======
-frontend/.env
-frontend/.env.*
->>>>>>> 50a4af1ea59ece0f7cccb619f499c9d4c70fb119
 
 # Fichiers système
 .DS_Store
