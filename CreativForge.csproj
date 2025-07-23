@@ -1,17 +1,10 @@
-<<<<<<< HEAD
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-=======
-<Project Sdk="Microsoft.NET.Sdk.Web">
->>>>>>> 50a4af1ea59ece0f7cccb619f499c9d4c70fb119
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-<<<<<<< HEAD
     <UserSecretsId>4865e433-b405-4d88-a126-7d65185dbb60</UserSecretsId>
-=======
->>>>>>> 50a4af1ea59ece0f7cccb619f499c9d4c70fb119
   </PropertyGroup>
 
   <ItemGroup>

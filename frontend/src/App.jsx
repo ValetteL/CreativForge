@@ -9,6 +9,7 @@ import Home from "./pages/Home/Home";
 import Login from "./pages/Auth/Login";
 import Generator from "./pages/Generator/Generator";
 import MyBriefs from "./pages/Briefs/MyBriefs";
+import AppRoutes from "./routes";
 
 // Main app routing and provider structure
 export default function App() {
@@ -22,17 +23,7 @@ export default function App() {
         }}/>
         <BrowserRouter>
           <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/generator" element={<Generator />} />
-            <Route path="/my-briefs" element={
-              <PrivateRoute>
-                <MyBriefs />
-              </PrivateRoute>
-            } />
-            {/* Add more routes here as needed */}
-          </Routes>
+          <AppRoutes />
         </BrowserRouter>
       </AuthProvider>
   );

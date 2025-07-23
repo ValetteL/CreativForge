@@ -17,6 +17,34 @@ public class BriefController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetBrief(int id)
+    {
+        var email = User.Identity?.Name;
+        if (string.IsNullOrEmpty(email))
+            return Unauthorized();
+
+        var user = await _db.Users.Include(u => u.Briefs)
+                                .FirstOrDefaultAsync(u => u.Email == email);
+        if (user == null)
+            return NotFound("Utilisateur inconnu.");
+
+        var brief = user.Briefs.FirstOrDefault(b => b.Id == id);
+        if (brief == null)
+            return NotFound();
+
+        // On retourne un DTO propre (ne JAMAIS exposer l'entité brute !)
+        return Ok(new BriefDto
+        {
+            Id = brief.Id,
+            Title = brief.Title,
+            Objective = brief.Objective,
+            Audience = brief.Audience,
+            Platform = brief.Platform
+        });
+    }
+
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetMyBriefs()
     {
@@ -91,6 +119,60 @@ public class BriefController : ControllerBase
             brief = new { brief.Id, brief.Title, brief.Objective, brief.Audience, brief.Platform }
         });
     }
+
+    [Authorize]
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteBrief(int id)
+    {
+        // Get user email from JWT claims
+        var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+        if (string.IsNullOrEmpty(email))
+            return Unauthorized();
+
+        var user = await _db.Users.Include(u => u.Briefs)
+                                .FirstOrDefaultAsync(u => u.Email == email);
+        if (user == null)
+            return NotFound();
+
+        var brief = user.Briefs.FirstOrDefault(b => b.Id == id);
+        if (brief == null)
+            return NotFound();
+
+        _db.Briefs.Remove(brief);
+        await _db.SaveChangesAsync();
+
+        return Ok(new { message = "Brief supprimé." });
+    }
+
+    [Authorize]
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateBrief(int id, [FromBody] BriefDto dto)
+    {
+        var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+        if (string.IsNullOrEmpty(email))
+            return Unauthorized();
+
+        var user = await _db.Users.Include(u => u.Briefs)
+                                .FirstOrDefaultAsync(u => u.Email == email);
+        if (user == null)
+            return NotFound();
+
+        var brief = user.Briefs.FirstOrDefault(b => b.Id == id);
+        if (brief == null)
+            return NotFound();
+
+        // Met à jour les champs
+        brief.Title = dto.Title;
+        brief.Objective = dto.Objective;
+        brief.Audience = dto.Audience;
+        brief.Platform = dto.Platform;
+
+        await _db.SaveChangesAsync();
+
+        return Ok(new { message = "Brief modifié.", brief });
+    }
+
+
 }
 
 // DTO for input validation (avoid trusting front!)

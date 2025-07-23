@@ -30,6 +30,12 @@ Interface : http://localhost:5000/index.html
 Swagger API : http://localhost:5000/swagger
 Export PDF : http://localhost:5000/api/export/brief/pdf
 
+# 🛡️ Sécurité & Configuration (Backend et Frontend)
+
+## Backend .NET
+
+- Copiez `appsettings.Development.json.example` en `appsettings.Development.json` pour votre usage local.
+
 ## Prochaines améliorations
 - Interface utilisateur stylisée
 - Ajout d’une base de données (MongoDB / EF Core)
@@ -40,3 +46,5 @@ Export PDF : http://localhost:5000/api/export/brief/pdf
 📄 Licence
 Ce projet est distribué sous licence MIT.
 Créé par ValetteL.
+
+

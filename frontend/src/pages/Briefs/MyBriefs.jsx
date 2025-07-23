@@ -1,4 +1,5 @@
 // src/pages/MyBriefs.jsx
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import BriefCard from "../../components/brief/BriefCard";
@@ -7,6 +8,7 @@ import toast from "react-hot-toast";
 
 export default function MyBriefs() {
   const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [briefs, setBriefs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
@@ -33,6 +35,24 @@ export default function MyBriefs() {
     if (currentUser) fetchBriefs();
   }, [currentUser]);
 
+  const [isDeleting, setIsDeleting] = useState(null);
+  const handleDelete = async(id) => {
+    if(!window.confirm("Êtes-vous sûr de vouloir supprimer ce brief ?")) return;
+    setIsDeleting(id);
+    try {
+      await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/brief/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${currentUser?.token}` }
+      });
+      setBriefs(prev => prev.filter(brief => brief.id !== id));
+      toast.success("Brief supprimé avec succès.");
+    } catch (err) {
+      toast.error("Erreur lors de la suppression du brief.");
+    } finally {
+      setIsDeleting(null);
+    }
+  }
+
   if (!currentUser) {
     return <div className={styles.message}>Veuillez vous connecter pour voir vos briefs.</div>;
   }
@@ -48,7 +68,12 @@ export default function MyBriefs() {
       ) : (
         <div className={styles.list}>
           {briefs.map(brief => (
-            <BriefCard key={brief.id} brief={brief} />
+            <BriefCard 
+              key={brief.id} 
+              brief={brief} 
+              onEdit={() => navigate(`/briefs/${brief.id}/edit`)}
+              onDelete={() => handleDelete(brief.id)}
+            />
           ))}
         </div>
       )}
