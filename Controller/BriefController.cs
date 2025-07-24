@@ -145,31 +145,30 @@ public class BriefController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateBrief(int id, [FromBody] BriefDto dto)
+    [HttpPut("{id}/prompt")]
+    public async Task<IActionResult> UpdateBriefPrompt(int id, [FromBody] PromptDto dto)
     {
         var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
         if (string.IsNullOrEmpty(email))
             return Unauthorized();
 
-        var user = await _db.Users.Include(u => u.Briefs)
-                                .FirstOrDefaultAsync(u => u.Email == email);
+        var user = await _db.Users.Include(u => u.Briefs).FirstOrDefaultAsync(u => u.Email == email);
         if (user == null)
             return NotFound();
 
-        var brief = user.Briefs.FirstOrDefault(b => b.Id == id);
+        var brief = user.Briefs.Include(b => b.Prompt).FirstOrDefault(b => b.Id == id);
         if (brief == null)
             return NotFound();
 
-        // Met à jour les champs
-        brief.Title = dto.Title;
-        brief.Objective = dto.Objective;
-        brief.Audience = dto.Audience;
-        brief.Platform = dto.Platform;
+        // On suppose que le Prompt existe déjà (sinon, créer)
+        var prompt = await _db.Prompts.FindAsync(dto.Id);
+        if (prompt == null)
+            return NotFound("Prompt non trouvé.");
 
+        brief.PromptId = prompt.Id;
         await _db.SaveChangesAsync();
 
-        return Ok(new { message = "Brief modifié.", brief });
+        return Ok(new { message = "Prompt mis à jour.", prompt });
     }
 
 
@@ -183,4 +182,11 @@ public class BriefDto
     public string Objective { get; set; }
     public string Audience { get; set; }
     public string Platform { get; set; }
+}
+
+// DTO minimal pour l’update
+public class PromptDto
+{
+    public int Id { get; set; }
+    // ... autres champs si besoin
 }

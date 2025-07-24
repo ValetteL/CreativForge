@@ -4,7 +4,7 @@ import { AuthContext } from "../../context/AuthContext";
 import styles from "./Navbar.module.css";
 
 export default function Navbar() {
-  const { currentUser, logout } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -15,10 +15,15 @@ export default function Navbar() {
   return (
     <nav className={styles.navbar}>
       <Link to="/" className={styles.link}>Accueil</Link>
-      {currentUser && (
+      {user && (
         <>
           <Link to="/generator" className={styles.link}>Génération</Link>
-          {currentUser && (
+          {user && (
+            <Link to="/dashboard" className={styles.link}>
+              Tableau de bord
+            </Link>
+          )}
+          {user && (
             <Link to="/my-briefs" className={styles.link}>
               Mes briefs
             </Link>
@@ -26,9 +31,9 @@ export default function Navbar() {
         </>
       )}
       <span className={styles.right}>
-        {currentUser ? (
+        {user ? (
           <>
-            <span className={styles.email}>{currentUser.email}</span>
+            <span className={styles.email}>{user.email}</span>
             <button onClick={handleLogout} className={styles.button}>Déconnexion</button>
           </>
         ) : (

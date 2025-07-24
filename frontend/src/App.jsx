@@ -1,30 +1,24 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import AuthProvider from "./context/AuthContext";
 import Navbar from "./components/common/Navbar";
-import PrivateRoute from "./components/PrivateRoute";
-
-import Home from "./pages/Home/Home";
-import Login from "./pages/Auth/Login";
-import Generator from "./pages/Generator/Generator";
-import MyBriefs from "./pages/Briefs/MyBriefs";
 import AppRoutes from "./routes";
 
-// Main app routing and provider structure
+// Root component: wraps everything in AuthProvider and Router
 export default function App() {
   return (
-      <AuthProvider>
-        <Toaster 
-          toastOptions={{
-            style: { background: "var(--accent)", color: "#fff" },
-            success: { style: { background: "var(--accent)", color: "#fff" } },
-            error: { style: { background: "#ff5555", color: "#fff" } },
-        }}/>
-        <BrowserRouter>
-          <Navbar />
-          <AppRoutes />
-        </BrowserRouter>
-      </AuthProvider>
+    <AuthProvider>
+      <Toaster
+        toastOptions={{
+          style: { background: "var(--accent)", color: "#fff" },
+          success: { background: "var(--accent)", color: "#fff" },
+          error: { background: "#ff5555", color: "#fff" },
+        }}
+      />
+      <BrowserRouter>
+        <Navbar />
+        <AppRoutes />
+      </BrowserRouter>
+    </AuthProvider>
   );
 }

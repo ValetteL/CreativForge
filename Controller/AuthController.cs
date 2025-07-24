@@ -21,6 +21,7 @@ public class AuthController : ControllerBase
     [HttpPost("google")]
     public async Task<IActionResult> Google([FromBody] GoogleLoginDto dto)
     {
+        // 1. Validate Google JWT token
         GoogleJsonWebSignature.Payload payload;
         try
         {
@@ -28,9 +29,10 @@ public class AuthController : ControllerBase
         }
         catch
         {
-            return Unauthorized("Token Google invalide");
+            return Unauthorized("Invalid Google token");
         }
 
+        // 2. Find or create the user
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == payload.Email);
         if (user == null)
         {
@@ -48,6 +50,7 @@ public class AuthController : ControllerBase
             await _db.SaveChangesAsync();
         }
 
+        // 3. Issue backend JWT
         var token = _tokenService.GenerateToken(user);
 
         return Ok(new

@@ -7,7 +7,7 @@ export default function ExportBriefPdfButton({ briefId }) {
 
   const handleExportPdf = async () => {
     setIsLoading(true);
-    const token = JSON.parse(localStorage.getItem("currentUser"))?.token;
+    const token = JSON.parse(localStorage.getItem("user"))?.token;
     try {
       const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/export/brief/pdf/${briefId}`, {
         headers: { "Authorization": `Bearer ${token}` }

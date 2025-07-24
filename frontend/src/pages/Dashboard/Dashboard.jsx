@@ -14,7 +14,7 @@ export default function Dashboard() {
       return;
     }
     const API_BASE = process.env.REACT_APP_API_BASE_URL || '';
-    fetch(`${API_BASE}/api/briefs`, {
+    fetch(`${API_BASE}/api/brief`, {
       headers: {
         'Authorization': `Bearer ${user.token}`
       }
@@ -25,7 +25,7 @@ export default function Dashboard() {
 
   const handleDelete = async (id) => {
     const API_BASE = process.env.REACT_APP_API_BASE_URL || '';
-    await fetch(`${API_BASE}/api/briefs/${id}`, {
+    await fetch(`${API_BASE}/api/brief/${id}`, {
       method: "DELETE",
       headers: {
         'Authorization': `Bearer ${user.token}`
@@ -37,7 +37,7 @@ export default function Dashboard() {
   return (
     <div>
       <h1>Mes briefs</h1>
-      <button onClick={() => navigate("/")}>Nouveau brief</button>
+      <button onClick={() => navigate("/generator")}>Nouveau brief</button>
       <div>
         {briefs.map(brief => (
           <BriefCard

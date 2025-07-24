@@ -6,7 +6,7 @@ import styles from "./Generator.module.css";
 
 export default function Generator() {
   // Access current user from context (if needed for future features)
-  const { currentUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   // Controlled input for the user idea (default: empty string, not null)
   const [userPrompt, setUserPrompt] = useState("");
@@ -49,7 +49,7 @@ export default function Generator() {
     setIsSaving(true);     // Start loading
     setSaveError(null);
     try {
-      const token = currentUser?.token;
+      const token = user?.token;
       const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/brief`, {
         method: "POST",
         headers: {
@@ -101,7 +101,7 @@ export default function Generator() {
               <div><b>Objectif :</b> {generatedBrief.objective}</div>
               <div><b>Audience :</b> {generatedBrief.audience}</div>
               <div><b>Plateforme :</b> {generatedBrief.platform}</div>
-              {currentUser && !isSaved && (
+              {user && !isSaved && (
                 <button
                   className={styles.saveButton}
                   onClick={handleSaveBrief}

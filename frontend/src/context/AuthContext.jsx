@@ -1,27 +1,31 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
 
+// AuthContext provides current user object and loading state for auth
 export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [user, setUser] = useState(null);      // User object (token, profile...)
+  const [loading, setLoading] = useState(true); // Is authentication check in progress?
 
+  // Load user from localStorage on first mount
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("currentUser"));
-    if (storedUser) setCurrentUser(storedUser);
+    const saved = localStorage.getItem("user");
+    if (saved) setUser(JSON.parse(saved));
+    setLoading(false);
   }, []);
 
-  const login = (userData) => {
-    setCurrentUser(userData);
-    localStorage.setItem("currentUser", JSON.stringify(userData));
+  // Standard login/logout (replace with real logic as needed)
+  const login = (userObj) => {
+    setUser(userObj);
+    localStorage.setItem("user", JSON.stringify(userObj));
   };
-
   const logout = () => {
-    setCurrentUser(null);
-    localStorage.removeItem("currentUser");
+    setUser(null);
+    localStorage.removeItem("user");
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -7,7 +7,7 @@ import styles from "./MyBriefs.module.css";
 import toast from "react-hot-toast";
 
 export default function MyBriefs() {
-  const { currentUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [briefs, setBriefs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -19,7 +19,7 @@ export default function MyBriefs() {
       setLoadError(null);
       try {
         const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/brief`, {
-          headers: { Authorization: `Bearer ${currentUser?.token}` }
+          headers: { Authorization: `Bearer ${user?.token}` }
         });
         if (res.status === 401) throw new Error("Session expirée ou non connecté.");
         if (!res.ok) throw new Error("Erreur lors du chargement.");
@@ -32,8 +32,8 @@ export default function MyBriefs() {
         setIsLoading(false);
       }
     };
-    if (currentUser) fetchBriefs();
-  }, [currentUser]);
+    if (user) fetchBriefs();
+  }, [user]);
 
   const [isDeleting, setIsDeleting] = useState(null);
   const handleDelete = async(id) => {
@@ -42,7 +42,7 @@ export default function MyBriefs() {
     try {
       await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/brief/${id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${currentUser?.token}` }
+        headers: { Authorization: `Bearer ${user?.token}` }
       });
       setBriefs(prev => prev.filter(brief => brief.id !== id));
       toast.success("Brief supprimé avec succès.");
@@ -53,7 +53,7 @@ export default function MyBriefs() {
     }
   }
 
-  if (!currentUser) {
+  if (!user) {
     return <div className={styles.message}>Veuillez vous connecter pour voir vos briefs.</div>;
   }
 
