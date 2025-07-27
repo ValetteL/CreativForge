@@ -1,4 +1,5 @@
 import ExportBriefPdfButton from "../ExportBriefPdfButton";
+import { Link } from "react-router-dom";
 
 export default function BriefCard({ brief, onEdit, onDelete, isDeleting }) {
   return (
@@ -7,7 +8,7 @@ export default function BriefCard({ brief, onEdit, onDelete, isDeleting }) {
       <p>{brief.objective}</p>
       <p>{brief.audience}</p>
       <p>{brief.platform}</p>
-      <button onClick={onEdit}>Modifier</button>
+      <Link to={`/briefs/${brief.id}/edit`} className="button">Edit</Link>
       <button onClick={onDelete} disabled={isDeleting}>
         {isDeleting ? "Suppression..." : "Supprimer"}
       </button>

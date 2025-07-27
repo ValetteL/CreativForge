@@ -1,121 +1,73 @@
-// Generator.jsx
-import { useState, useContext } from "react";
+import usePromptGenerator from "../../hooks/usePromptGenerator";
+import { useState } from "react";
+import BriefField from "../../components/brief/BriefField";
 import toast from "react-hot-toast";
-import { AuthContext } from "../../context/AuthContext";
-import styles from "./Generator.module.css";
 
 export default function Generator() {
-  // Access current user from context (if needed for future features)
-  const { user } = useContext(AuthContext);
+  const {
+    prompt, brief, loading, regenLoading,
+    generatePrompt, regeneratePromptField, regenerateBriefField
+  } = usePromptGenerator();
+  const [userTheme, setUserTheme] = useState("");
 
-  // Controlled input for the user idea (default: empty string, not null)
-  const [userPrompt, setUserPrompt] = useState("");
-  // Stores the generated prompt from backend
-  const [generatedPrompt, setGeneratedPrompt] = useState(null);
-  // Stores the generated brief associated
-  const [generatedBrief, setGeneratedBrief] = useState(null);
-  // Loader state for button/spinner
-  const [isLoading, setIsLoading] = useState(false);
-  // State for the brief saving workflow
-  const [isSaving, setIsSaving] = useState(false);    // True while API call in progress
-  const [isSaved, setIsSaved] = useState(false);      // True if brief was successfully saved
-  const [saveError, setSaveError] = useState(null);   // String: error message to display
-
-
-  // Handles form submit: send prompt to backend, get prompt+brief back
-  const handleSubmit = async e => {
+  // Handles prompt generation (whole prompt)
+  const handleGenerate = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     try {
-      // POST request to API with userPrompt (string, not null)
-      const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/prompt/generate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ theme: userPrompt || "" })
-      });
-      if (!res.ok) throw new Error("Erreur serveur");
-      const data = await res.json();
-      setGeneratedPrompt(data.prompt);
-      setGeneratedBrief(data.brief);
+      await generatePrompt(userTheme);
+      toast.success("Prompt généré !");
     } catch {
-      alert("Impossible de générer le prompt.");
-    } finally {
-      setIsLoading(false);
+      toast.error("Impossible de générer le prompt.");
     }
   };
 
-  const handleSaveBrief = async () => {
-    if (!generatedBrief) return;
-    setIsSaving(true);     // Start loading
-    setSaveError(null);
-    try {
-      const token = user?.token;
-      const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/brief`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(generatedBrief)
-      });
-      if (res.status === 409) {
-        // Brief already saved (conflict)
-        setIsSaved(true);
-        toast("Brief déjà sauvegardé.", { icon: "⚠️" });
-        return;
-      }
-      if (!res.ok) throw new Error("Impossible de sauvegarder le brief.");
-      // Successfully saved
-      setIsSaved(true);
-      toast.success("Brief sauvegardé !");
-    } catch (err) {
-      setSaveError("Erreur lors de la sauvegarde.");
-      toast.error("Erreur lors de la sauvegarde du brief.");
-    } finally {
-      setIsSaving(false);   // End loading
-    }
-  };
-  
   return (
-    <div className={styles.page}>
-      <h2 className={styles.title}>Générer un prompt créatif</h2>
-      <form onSubmit={handleSubmit} className={styles.form}>
+    <div className="generator-page">
+      <h2>Générer un prompt créatif</h2>
+      <form onSubmit={handleGenerate}>
         <input
-          value={userPrompt}
-          onChange={e => setUserPrompt(e.target.value)}
+          value={userTheme}
+          onChange={e => setUserTheme(e.target.value)}
           placeholder="Décrivez votre idée (optionnel)"
-          className={styles.input}
         />
-        <button type="submit" disabled={isLoading} className={styles.button}>
-          {isLoading ? "Génération..." : "Générer"}
+        <button type="submit" disabled={loading}>
+          {loading ? "Génération..." : "Générer"}
         </button>
       </form>
-      {generatedPrompt && (
-        <div className={styles.promptOutput}>
+
+      {prompt && (
+        <div className="prompt-output">
           <h3>Prompt généré :</h3>
-          <div>{generatedPrompt.fullPrompt}</div>
-          {generatedBrief && (
-            <div className={styles.briefDetails}>
-              <h4>Détails du brief :</h4>
-              <div><b>Titre :</b> {generatedBrief.title}</div>
-              <div><b>Objectif :</b> {generatedBrief.objective}</div>
-              <div><b>Audience :</b> {generatedBrief.audience}</div>
-              <div><b>Plateforme :</b> {generatedBrief.platform}</div>
-              {user && !isSaved && (
-                <button
-                  className={styles.saveButton}
-                  onClick={handleSaveBrief}
-                  disabled={isSaving}
-                >
-                  {isSaving ? "Sauvegarde..." : "Sauvegarder ce brief"}
-                </button>
-              )}
-              {isSaved && <span className={styles.savedTag}>Brief sauvegardé !</span>}
-              {saveError && <span className={styles.saveError}>{saveError}</span>}
-            </div>
-          )}
+          <PromptField label="Format" value={prompt.format} onRegenerate={() => regeneratePromptField("format")} loading={regenLoading.format} />
+          <PromptField label="Thème" value={prompt.theme} onRegenerate={() => regeneratePromptField("theme")} loading={regenLoading.theme} />
+          <PromptField label="Contrainte" value={prompt.constraint} onRegenerate={() => regeneratePromptField("constraint")} loading={regenLoading.constraint} />
+          <div style={{ marginTop: 16, color: "#5fd26d" }}>
+            <b>Prompt final :</b> {prompt.fullPrompt}
+          </div>
         </div>
       )}
+
+      {brief && (
+        <div className="brief-output">
+          <h3>Brief associé</h3>
+          <BriefField label="Titre" value={brief.title} onRegenerate={() => regenerateBriefField("title")} loading={regenLoading.brief_title} />
+          <BriefField label="Objectif" value={brief.objective} onRegenerate={() => regenerateBriefField("objective")} loading={regenLoading.brief_objective} />
+          <BriefField label="Audience" value={brief.audience} onRegenerate={() => regenerateBriefField("audience")} loading={regenLoading.brief_audience} />
+          <BriefField label="Plateforme" value={brief.platform} onRegenerate={() => regenerateBriefField("platform")} loading={regenLoading.brief_platform} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Minimal pro field component
+function PromptField({ label, value, onRegenerate, loading }) {
+  return (
+    <div style={{ marginBottom: 8 }}>
+      <b>{label} :</b> <span>{value}</span>
+      <button onClick={onRegenerate} disabled={loading} className="button button-small" style={{ marginLeft: 10 }}>
+        {loading ? "..." : "Régénérer"}
+      </button>
     </div>
   );
 }

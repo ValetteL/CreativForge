@@ -23,6 +23,7 @@ builder.Services.AddSingleton<BriefService>();
 builder.Services.AddSingleton<PlannerService>();
 builder.Services.AddSingleton<PdfExporter>();
 builder.Services.AddSingleton<TokenService>();
+builder.Services.AddScoped<PromptService>();
 
 builder.Services.AddCors(options =>
 {

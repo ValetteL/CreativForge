@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using CreativForge.Services;
-using CreativForge.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CreativForge.Controllers
 {
@@ -8,32 +7,51 @@ namespace CreativForge.Controllers
     [Route("api/[controller]")]
     public class PromptController : ControllerBase
     {
-        // Dependency-injected services
         private readonly PromptService _promptService;
-        private readonly BriefService _briefService;
 
-        // Constructor: inject both services
-        public PromptController(PromptService promptService, BriefService briefService)
+        public PromptController(PromptService promptService)
         {
             _promptService = promptService;
-            _briefService = briefService;
         }
 
         /// <summary>
-        /// Generate a creative prompt and a matching brief.
-        /// Expects (optionally) a user input in the body.
+        /// Génère un prompt complet (POST /api/prompt)
         /// </summary>
-        [HttpPost("generate")]
+        [HttpPost]
         public IActionResult GeneratePrompt([FromBody] PromptInput input)
         {
-            // Generate a random or custom prompt
-            var prompt = _promptService.GeneratePrompt();
-
-            // Create a brief based on the generated prompt
-            var brief = _briefService.CreateBriefFromPrompt(prompt);
-
-            // Return both prompt and brief as JSON
-            return Ok(new { prompt, brief });
+            var prompt = _promptService.GeneratePrompt(input?.Theme); // Theme optionnel
+            if (prompt == null)
+                return BadRequest("Generation failed.");
+            return Ok(new { prompt });
         }
+
+        /// <summary>
+        /// Régénère un champ spécifique du prompt (POST /api/prompt/regenerate-field)
+        /// </summary>
+        [HttpPost("regenerate-field")]
+        public IActionResult RegenerateField([FromBody] RegenerateFieldInput req)
+        {
+            object? value = req.Field switch
+            {
+                "theme" => _promptService.GenerateTheme(),
+                "constraint" => _promptService.GenerateConstraint(),
+                "format" => _promptService.GenerateFormat(),
+                "all" => _promptService.GeneratePrompt(),
+                _ => null
+            };
+            if (value == null)
+                return BadRequest("Invalid field.");
+            return Ok(new { value });
+        }
+    }
+
+    public class PromptInput
+    {
+        public string? Theme { get; set; }
+    }
+    public class RegenerateFieldInput
+    {
+        public string Field { get; set; }
     }
 }

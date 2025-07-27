@@ -1,19 +1,12 @@
-namespace CreativForge.Models
+namespace CreativForge.DTOs
 {
-    public class Brief
+    public class BriefDto
     {
         public int Id { get; set; }
         public string Title { get; set; }
         public string Objective { get; set; }
         public string Audience { get; set; }
         public string Platform { get; set; }
-
-        public int? PromptId { get; set; }
-        public Prompt Prompt { get; set; }
-
-        public int UserId { get; set; }
-        public User User { get; set; }
+        public PromptDto Prompt { get; set; }
     }
-
-
 }
