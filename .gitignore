@@ -11,6 +11,10 @@ obj/
 *.db
 *.sqlite
 
+# Entity Framework Migrations
+**/Migrations/
+Migrations/
+
 # Configuration locale
 appsettings.Development.json
 appsettings.Local.json

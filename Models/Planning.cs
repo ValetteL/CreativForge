@@ -2,7 +2,7 @@ namespace CreativForge.Models
 {
     public class Planning
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public int Id { get; set; }
         public string ProjectName { get; set; }
         public List<string> Tasks { get; set; } = new();
         public DateTime StartDate { get; set; } = DateTime.Today;

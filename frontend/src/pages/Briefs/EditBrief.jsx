@@ -1,6 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
-import BriefForm from "../../components/brief/BriefForm";
 import { AuthContext } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 
@@ -9,77 +8,83 @@ export default function EditBrief() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    title: "",
-    objective: "",
-    audience: "",
-    platform: ""
-  });
-  const [loading, setLoading] = useState(true);
-  const [fetchError, setFetchError] = useState(null);
+  const [form, setForm] = useState({ title: "", objective: "", audience: "", platform: "" });
+  const [prompts, setPrompts] = useState([]);
+  const [selectedPromptId, setSelectedPromptId] = useState(null);
 
-  // Fetch existing brief
+  // Fetch prompts
   useEffect(() => {
-    if (!user?.token) return;
-    setLoading(true);
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/api/prompt`, {
+      headers: { Authorization: `Bearer ${user.token}` }
+    })
+      .then(res => res.json())
+      .then(setPrompts)
+      .catch(() => setPrompts([]));
+  }, [user.token]);
+
+  // Fetch brief and init selectedPromptId
+  useEffect(() => {
     fetch(`${process.env.REACT_APP_API_BASE_URL}/api/brief/${id}`, {
-      headers: { "Authorization": `Bearer ${user.token}` }
+      headers: { Authorization: `Bearer ${user.token}` }
     })
       .then(async res => {
         if (!res.ok) throw new Error();
         return res.json();
       })
-      .then(data => setForm(data))
-      .catch(() => setFetchError("Brief introuvable ou accès refusé."))
-      .finally(() => setLoading(false));
-  }, [id, user?.token]);
+      .then(data => {
+        setForm(data);
+        setSelectedPromptId(data.promptId || null); // si promptId existe dans le brief
+      })
+      .catch(() => toast.error("Brief introuvable ou accès refusé."));
+  }, [id, user.token]);
 
-  // Handle input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm(f => ({ ...f, [name]: value }));
-  };
-
-  // Submit update
-  const handleUpdate = async (e) => {
+  async function handleUpdatePrompt(e) {
     e.preventDefault();
-    try {
-      const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/brief/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${user.token}`
-        },
-        body: JSON.stringify(form)
-      });
-      if (!res.ok) throw new Error();
-      toast.success("Brief modifié !");
-      navigate("/my-briefs"); // ou dashboard selon UX souhaitée
-    } catch {
-      toast.error("Erreur lors de la modification.");
-    }
-  };
+    if (!selectedPromptId) return;
 
-  if (loading) return <div>Chargement…</div>;
-  if (fetchError) return <div>{fetchError}</div>;
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/brief/${id}/prompt`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user.token}`
+      },
+      body: JSON.stringify({ id: selectedPromptId })
+    });
+    if (!res.ok) {
+      toast.error("Erreur lors de la mise à jour du prompt.");
+      return;
+    }
+    toast.success("Prompt mis à jour !");
+    // Optionnel : rafraîchir le brief
+  }
+
+  // ...le formulaire d’édition du brief...
 
   return (
     <div className="edit-brief-page">
       <h1>Modifier le brief</h1>
-      <form onSubmit={handleUpdate} style={{ maxWidth: 500, margin: "auto" }}>
-        <label>Titre
-          <input name="title" value={form.title} onChange={handleChange} required />
+
+      {/* Formulaire d’édition du brief */}
+      {/* ... */}
+
+      {/* Formulaire pour modifier le prompt */}
+      <form onSubmit={handleUpdatePrompt}>
+        <label>
+          Associer un prompt :
+          <select
+            value={selectedPromptId || ""}
+            onChange={e => setSelectedPromptId(Number(e.target.value))}
+            required
+          >
+            <option value="">Choisir un prompt</option>
+            {prompts.map(p => (
+              <option key={p.id} value={p.id}>
+                {p.fullPrompt}
+              </option>
+            ))}
+          </select>
         </label>
-        <label>Objectif
-          <textarea name="objective" value={form.objective} onChange={handleChange} required />
-        </label>
-        <label>Audience
-          <input name="audience" value={form.audience} onChange={handleChange} required />
-        </label>
-        <label>Plateforme
-          <input name="platform" value={form.platform} onChange={handleChange} required />
-        </label>
-        <button type="submit" className="button">Enregistrer</button>
+        <button type="submit">Mettre à jour le prompt</button>
       </form>
     </div>
   );

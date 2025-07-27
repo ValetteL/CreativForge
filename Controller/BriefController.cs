@@ -148,29 +148,35 @@ public class BriefController : ControllerBase
     [HttpPut("{id}/prompt")]
     public async Task<IActionResult> UpdateBriefPrompt(int id, [FromBody] PromptDto dto)
     {
+        // Get current user's email from JWT claims
         var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
         if (string.IsNullOrEmpty(email))
             return Unauthorized();
 
-        var user = await _db.Users.Include(u => u.Briefs).FirstOrDefaultAsync(u => u.Email == email);
+        // Find user in database
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
         if (user == null)
             return NotFound();
 
-        var brief = user.Briefs.Include(b => b.Prompt).FirstOrDefault(b => b.Id == id);
+        // Retrieve the brief by ID and UserId, include its Prompt navigation property
+        var brief = await _db.Briefs
+            .Include(b => b.Prompt)
+            .FirstOrDefaultAsync(b => b.Id == id && b.UserId == user.Id);
+
         if (brief == null)
             return NotFound();
 
-        // On suppose que le Prompt existe déjà (sinon, créer)
+        // Find the new prompt by ID
         var prompt = await _db.Prompts.FindAsync(dto.Id);
         if (prompt == null)
-            return NotFound("Prompt non trouvé.");
+            return NotFound("Prompt not found.");
 
+        // Associate the new prompt to the brief
         brief.PromptId = prompt.Id;
         await _db.SaveChangesAsync();
 
-        return Ok(new { message = "Prompt mis à jour.", prompt });
+        return Ok(new { message = "Prompt updated.", prompt });
     }
-
 
 }
 

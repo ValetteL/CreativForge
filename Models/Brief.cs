@@ -11,8 +11,8 @@ namespace CreativForge.Models
     public int UserId { get; set; }
     public User User { get; set; }
 
-    public int? PromptId { get; set; }
-    public Prompt? Prompt { get; set; }
+    public int? PromptId { get; set; }      // clé étrangère (nullable)
+    public Prompt? Prompt { get; set; }     // navigation property
 }
 
 }
