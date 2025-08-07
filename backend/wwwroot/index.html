@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>CreativForge</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav>
+    <a href="/index.html">🏠 Générer</a>
+    <a href="/briefs.html">📁 Mes briefs</a>
+    <span id="auth-link"></span>
+  </nav>
+  <div class="container">
+    <h1>🎨 CreativForge</h1>
+
+    <div id="auth-section" class="section">
+      <!-- login/logout -->
+    </div>
+
+    <div id="prompt-section" class="section">
+      <h2>Générer un prompt</h2>
+      <button onclick="generatePrompt()">Générer une idée</button>
+      <p id="prompt-result"></p>
+      <div id="save-section" class="hidden">
+        <button onclick="savePrompt()">💾 Sauvegarder ce brief</button>
+      </div>
+    </div>
+
+    <div id="briefs-section" class="section hidden">
+      <h2>📁 Mes briefs</h2>
+      <ul id="brief-list"></ul>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

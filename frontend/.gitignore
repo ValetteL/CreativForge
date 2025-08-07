@@ -10,9 +10,17 @@
 
 # production
 /build
+<<<<<<< HEAD
 
 # misc
 .DS_Store
+=======
+dist/
+
+# misc
+.DS_Store
+.env
+>>>>>>> 6331484 (features : refactorisation architecture, intégration full-stack génération IA (FastAPI/Ollama), Dockerisation en cours)
 .env.local
 .env.development.local
 .env.test.local

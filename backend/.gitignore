@@ -1,0 +1,28 @@
+# --- .gitignore pour projet ASP.NET + React ---
+
+# Binaires et dossiers build .NET
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.vs/
+.vscode/
+*.db
+*.sqlite
+
+# Entity Framework Migrations
+**/Migrations/
+Migrations/
+
+# Configuration locale
+appsettings.*.json
+.env
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/

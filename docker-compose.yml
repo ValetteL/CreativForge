@@ -1,7 +1,44 @@
 services:
+<<<<<<< HEAD
   creativforge:
     build: .
     ports:
       - "5006:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+=======
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5006:5006"
+    depends_on:
+      - ai
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+
+  ai:
+    build: ./ai
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./ai:/app
+
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+volumes:
+  ollama_data:
+>>>>>>> 6331484 (features : refactorisation architecture, intégration full-stack génération IA (FastAPI/Ollama), Dockerisation en cours)

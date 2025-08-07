@@ -12,6 +12,7 @@ export default function usePromptGenerator() {
   const [regenLoading, setRegenLoading] = useState({});
   
   // Generate prompt + brief (initial or global regen)
+<<<<<<< HEAD
   async function generatePrompt(userTheme = null) {
     setLoading(true);
     try {
@@ -19,6 +20,15 @@ export default function usePromptGenerator() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ theme: userTheme })
+=======
+  async function generatePrompt(userPrompt = null) {
+    setLoading(true);
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/ai/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: userPrompt })
+>>>>>>> 6331484 (features : refactorisation architecture, intégration full-stack génération IA (FastAPI/Ollama), Dockerisation en cours)
       });
       if (!res.ok) throw new Error("Server error");
       const data = await res.json();

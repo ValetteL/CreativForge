@@ -1,0 +1,50 @@
+body {
+  background-color: #282a36;
+  color: #f8f8f2;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 2rem;
+  transition: background 0.3s ease;
+}
+
+nav a {
+  margin-right: 1rem;
+  color: #8be9fd;
+  transition: color 0.2s;
+}
+
+button:hover, a:hover {
+  opacity: 0.85;
+  transform: scale(1.01);
+  transition: all 0.2s ease;
+}
+
+button, input, select {
+  background-color: #44475a;
+  color: #f8f8f2;
+  border: none;
+  padding: 0.5rem;
+  margin: 0.25rem;
+  border-radius: 4px;
+}
+
+a {
+  color: #8be9fd;
+  text-decoration: none;
+}
+
+h1, h2 {
+  color: #bd93f9;
+}
+
+.hidden {
+  display: none;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+}

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # --- .gitignore pour projet ASP.NET + React ---
 
 # Binaires et dossiers build .NET
@@ -37,3 +38,11 @@ Thumbs.db
 # Logs
 *.log
 logs/
+=======
+*.log
+.env
+.idea/
+.vscode/
+.DS_Store
+docker-compose.override.yml
+>>>>>>> 6331484 (features : refactorisation architecture, intégration full-stack génération IA (FastAPI/Ollama), Dockerisation en cours)
