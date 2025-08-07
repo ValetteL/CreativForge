@@ -1,46 +1,88 @@
 # CreativForge
 
-**CreativForge** est une application web ASP.NET Core créative.  
-Elle permet de générer des prompts créatifs, de planifier des projets, et d’exporter des briefs en PDF.
+**CreativForge** Plateforme de génération d'idées, prompts et briefs créatifs augmentée par IA (Ollama + Llama3, stack full-stack .NET + React + FastAPI/Python) avec export PDF
 
 🚧 **Projet WIP** – l’interface et les fonctionnalités sont en cours de développement.
 
 ---
 
+## Architecture 
+- **Frontend** : React (Node.js) - `/frontend`
+- **Backend** : ASP.NET Core WebAPI - `/backend`
+- **AI Service** : FastAPI (Python 3.10+) - `/ai`
+- **LLM** : Ollama (Llama3 ou autre modèle local)
+- **Database** : SQLite (EF Core)
+
+---
+
 ## 📌 Fonctionnalités principales
 
-- 🎲 Générateur de prompts créatifs
+- 🎲 Générateur de prompts créatifs/granulaire
 - 📅 Planification d’objectifs ou d’étapes
-- 📝 Génération de briefs au format PDF
+- 📝 Génération de briefs et export au format PDF
 - 📂 Architecture modulaire ASP.NET MVC (Controllers, Services, Models)
-- 📦 Export PDF avec [QuestPDF](https://github.com/QuestPDF/QuestPDF)
-- 🌐 API REST prête à l’emploi (Swagger intégré)
+
+---
+
+## 🐳 Lancement rapide (Docker WIP)
+
+> Nécessite : [Docker Desktop](https://www.docker.com/products/docker-desktop/)  
+> Installer Ollama localement *ou* laisser Docker gérer si le service est inclus dans `docker-compose.yml`.
+> docker-compose up --build à la racine du projet
+
+Frontend sur http://localhost:3000
+
+Backend sur http://localhost:5006
+
+FastAPI (AI) sur http://localhost:8001
+
+Ollama sur http://localhost:11434
 
 ---
 
 ## 🚀 Lancer le projet localement
 
+### 1. Configurer les variables sensibles (backend)
+
+- Créer un fichier `.env` dans `/backend` avec les clés suivantes (jamais de commit!) :
+  JWT_SECRET=*********
+  GOOGLE_CLIENT_ID=********.apps.googleusercontent.com
+  GOOGLE_CLIENT_SECRET=********
+
+### 2.
+
+ollama : 
+
+ollama serve
+ollama pull llama3
+
+/ai : 
+
+cd ai
+pip install -r requirements.txt
+python -m venv venv && /venv/Scripts/activate
+uvicorn main:app --reload --port 8001
+
+/backend : 
+
 dotnet restore
-dotnet build
+dotnet ef database update
 dotnet run
 
-Ouvrir dans un navigateur :
+/frontend :
 
-Interface : http://localhost:5000/index.html
-Swagger API : http://localhost:5000/swagger
-Export PDF : http://localhost:5000/api/export/brief/pdf
+cd frontend
+npm install
+npm start
 
-# 🛡️ Sécurité & Configuration (Backend et Frontend)
-
-## Backend .NET
-
-- Copiez `appsettings.Development.json.example` en `appsettings.Development.json` pour votre usage local.
+---
 
 ## Prochaines améliorations
 - Interface utilisateur stylisée
-- Ajout d’une base de données (MongoDB / EF Core)
-- Authentification simple
-- Sauvegarde des briefs
+- Sélection/édition granulaire des prompts/briefs via l’UI React
+- Requête IA plus personnalisable
+- Auth Google plus robuste/production-ready
+- CI/CD, monitoring, etc.
 - Génération de planning détaillé
 
 📄 Licence
