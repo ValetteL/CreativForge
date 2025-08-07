@@ -1,48 +1,6 @@
-<<<<<<< HEAD
-# --- .gitignore pour projet ASP.NET + React ---
-
-# Binaires et dossiers build .NET
-bin/
-obj/
-*.user
-*.suo
-*.cache
-*.vs/
-.vscode/
-*.db
-*.sqlite
-
-# Entity Framework Migrations
-**/Migrations/
-Migrations/
-
-# Configuration locale
-appsettings.Development.json
-appsettings.Local.json
-appsettings.*.local.json
-appsettings.json
-.env
-frontend/.env
-
-
-# Node / React build
-node_modules/
-frontend/node_modules/
-frontend/build/
-frontend/dist/
-
-# Fichiers système
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-logs/
-=======
 *.log
 .env
 .idea/
 .vscode/
 .DS_Store
 docker-compose.override.yml
->>>>>>> 6331484 (features : refactorisation architecture, intégration full-stack génération IA (FastAPI/Ollama), Dockerisation en cours)
