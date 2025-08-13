@@ -53,8 +53,8 @@ Ollama sur http://localhost:11434
 
 ollama : 
 
-ollama serve
 ollama pull llama3
+ollama serve
 
 /ai : 
 
