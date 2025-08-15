@@ -19,12 +19,16 @@ def extract_json_from_text(text):
     return None
 
 def build_prompt(prompt):
-    return ("Generate a creative project idea in perfect JSON format, "
-            "with keys: theme, format, contrainte. "
-            "Example: {\"theme\": \"Voyage\", \"format\": \"Podcast\", \"contrainte\": \"Invité mystère\"} "
-            "NO commentary, NO markdown, JSON only."
-            f"\nBase idea : {prompt or 'any'}")
+    return (
+        "Génère une idée de projet créative en français, "
+        "au format JSON parfait, "
+        "avec les clés : theme, format, contrainte. "
+        "Exemple : {\"theme\": \"Voyage\", \"format\": \"Podcast\", \"contrainte\": \"Invité mystère\"} "
+        "Pas de commentaires, pas de markdown, uniquement le JSON."
+        f"\nIdée de base : {prompt or 'n’importe laquelle'}"
+    )
 
+# Endpoint to generate a creative project idea based on a prompt
 @app.post("/generate")
 def generate(prompt: str = Body(..., embed=True)):
     prompt = build_prompt(prompt)

@@ -23,7 +23,7 @@ namespace CreativForge.Services
             var response = await _http.PostAsync("http://localhost:8000/generate", content);
             response.EnsureSuccessStatusCode();
             var result = await response.Content.ReadAsStringAsync();
-            // Tu peux parser le JSON ici si tu veux aller plus loin
+            // todo : parse the result to extract the prompt
             return result;
         }
     }
