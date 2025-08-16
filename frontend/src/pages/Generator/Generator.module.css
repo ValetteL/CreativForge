@@ -1,79 +1,110 @@
+/* ===== Page container ===== */
 .page {
-  max-width: 520px;
-  margin: var(--spacing-lg) auto;
+  min-height: calc(100vh - 64px); /* full height minus navbar */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-lg) var(--spacing-sm);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
 }
 
+/* Title */
 .title {
-  color: var(--color-accent);
   font-size: var(--font-size-title);
   font-weight: 700;
-  margin-bottom: var(--spacing-md);
+  margin: 0 0 var(--spacing-md) 0;
 }
 
+/* Chat-like input form */
 .form {
+  width: 100%;
+  max-width: 720px;
   display: flex;
   gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
+  align-items: center;
 }
 
+/* Input field */
 .input {
   flex: 1;
-  background: var(--color-input-bg);
-  color: var(--color-text);
-  border: 1.5px solid var(--color-input-border);
-  border-radius: var(--radius-sm);
-  padding: 11px 12px;
+  padding: 14px 16px;
   font-size: var(--font-size-base);
+  color: var(--color-text);
+  background: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--radius-lg);
   outline: none;
-  transition: border 0.15s;
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
 }
+.input::placeholder { color: var(--color-text-muted); }
 .input:focus {
   border-color: var(--color-input-focus);
+  /* if you want a focus ring, uncomment the next line and add a CSS var if desired */
+  /* box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-input-focus), transparent 70%); */
+  background: color-mix(in oklab, var(--color-input-bg), white 4%);
 }
 
-.button {
+/* Primary button */
+.primaryBtn {
+  padding: 12px 18px;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--color-accent);
+  color: #0b1220;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .08s ease, background .15s ease, opacity .15s ease;
+}
+.primaryBtn:hover { transform: translateY(-1px); background: var(--color-accent-alt); }
+.primaryBtn:disabled { opacity: .65; cursor: not-allowed; }
+
+/* Output card (prompt/brief) */
+.output {
+  width: 100%;
+  max-width: 720px;
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+
+/* Subtitle */
+.subtitle {
+  margin: 0 0 var(--spacing-sm) 0;
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+}
+
+/* Field row with small button */
+.fieldRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-xs) 0;
+}
+
+/* Small secondary button */
+.smallBtn {
+  padding: 6px 10px;
+  font-size: var(--font-size-xs);
+  border-radius: var(--radius-md);
   background: var(--color-button);
   color: var(--color-text);
-  border: 1.5px solid var(--color-input-border);
-  border-radius: var(--radius-sm);
-  font-weight: 500;
-  padding: 10px 20px;
-  font-size: var(--font-size-base);
+  border: 1px solid var(--color-border);
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: background .15s ease, opacity .15s ease, transform .08s ease;
 }
-.button:focus,
-.button:hover {
-  background: var(--color-button-hover);
-  color: #fff;
-}
-.saveButton {
-  margin-top: 18px;
-  padding: 10px 22px;
-  background: var(--color-button);
-  color: var(--color-accent);
-  border: 1.5px solid var(--color-input-border);
-  border-radius: var(--radius-sm);
-  font-weight: 600;
-  font-size: 1em;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-}
-.saveButton:focus,
-.saveButton:hover {
-  background: var(--color-button-hover);
-  color: #fff;
-}
-.savedTag {
-  color: var(--color-accent);
-  font-weight: 600;
-  margin-left: 16px;
-}
+.smallBtn:hover { background: var(--color-button-hover); transform: translateY(-1px); }
+.smallBtn:disabled { opacity: .6; cursor: not-allowed; }
 
-.saveError {
-  color: #ff5555;
-  font-weight: 600;
-  margin-left: 16px;
+/* Final prompt accent */
+.finalPrompt {
+  margin-top: var(--spacing-sm);
+  color: var(--color-accent-alt);
+  word-break: break-word;
 }
-
-
