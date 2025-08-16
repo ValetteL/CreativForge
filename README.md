@@ -1,6 +1,6 @@
 # CreativForge
 
-**CreativForge** Plateforme de génération d'idées, prompts et briefs créatifs augmentée par IA (Ollama + Llama3, stack full-stack .NET + React + FastAPI/Python) avec export PDF
+**CreativForge** Plateforme de génération d'idées créatifs augmentée par IA (Ollama + Llama3, stack full-stack .NET + React + FastAPI/Python) avec export PDF
 
 🚧 **Projet WIP** – l’interface et les fonctionnalités sont en cours de développement.
 
