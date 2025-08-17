@@ -5,6 +5,9 @@
       "Microsoft.AspNetCore": "Warning"
     }
   },
+  "ConnectionStrings": {
+    "Default": "Data Source=...\\creativforge.db"
+  },
   "Jwt": {
     "Secret": "YOUR_JWT_SECRET"
   },
