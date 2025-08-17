@@ -44,7 +44,7 @@ Ollama sur http://localhost:11434
 
 ### 1. Configurer les variables sensibles (backend)
 
-- Créer un fichier `.env` dans `/backend` avec les clés suivantes (jamais de commit!) :
+- Créer un fichier `appSettings.*.json` dans `/backend` avec les clés suivantes (jamais de commit!) :
   JWT_SECRET=*********
   GOOGLE_CLIENT_ID=********.apps.googleusercontent.com
   GOOGLE_CLIENT_SECRET=********
