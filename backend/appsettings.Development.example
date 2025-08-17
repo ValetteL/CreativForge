@@ -6,12 +6,13 @@
     }
   },
   "ConnectionStrings": {
-    "Default": "Data Source=...\\creativforge.db"
+    "Default": "Data Source=creativforge.db"
   },
   "Jwt": {
     "Secret": "YOUR_JWT_SECRET"
   },
   "Authentication": {
+    "FrontendUrl": "http://localhost:3000",
     "Google": {
       "ClientId": "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
       "ClientSecret": "YOUR_GOOGLE_CLIENT_SECRET"

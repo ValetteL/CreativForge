@@ -1,35 +1,41 @@
-import usePromptGenerator from "../../hooks/usePromptGenerator";
 import { useState } from "react";
-import BriefField from "../../components/brief/BriefField";
-import toast from "react-hot-toast";
-import styles from "./Generator.module.css";
+import { authFetch } from "@/utils/authFetch";
+import styles from "./generator.module.css";
 
 export default function Generator() {
-  const {
-    prompt, brief, loading, regenLoading,
-    generatePrompt, regeneratePromptField, regenerateBriefField
-  } = usePromptGenerator();
-  const [userTheme, setUserTheme] = useState("");
+  const [value, setValue] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [idea, setIdea] = useState("");
+  const [brief, setBrief] = useState("");
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
 
-  // Handles prompt generation (whole prompt)
-  const handleGenerate = async (e) => {
-    e.preventDefault();
+  const onGenerate = async () => {
+    setLoading(true);
     try {
-      await generatePrompt(userTheme);
-      toast.success("Prompt généré !");
-    } catch {
-      toast.error("Impossible de générer le prompt.");
+      const res = await authFetch(`${API_BASE}/api/ai/generate`, {
+        method: "POST",
+        body: JSON.stringify({ prompt: value }),
+      });
+      const data = await res.json();
+      // Expecting { idea, brief } from backend (as we discussed)
+      setIdea(data.idea || "");
+      setBrief(data.brief || "");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
     }
   };
 
+  // ... UI using styles
   return (
     <div className={styles.page}>
-      <h2 className={styles.title}>Générer un prompt créatif</h2>
-      <form onSubmit={handleGenerate} className={styles.form}>
+      <h2 className={styles.title}>Générer une idée créative</h2>
+      <form onSubmit={(e) => { e.preventDefault(); onGenerate(); }} className={styles.form}>
         <input
           className={styles.input}
-          value={userTheme}
-          onChange={e => setUserTheme(e.target.value)}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
           placeholder="Décrivez votre idée (optionnel)"
         />
         <button type="submit" disabled={loading} className={styles.primaryBtn}>
@@ -37,39 +43,18 @@ export default function Generator() {
         </button>
       </form>
 
-      {prompt && (
+      {idea && (
         <div className={styles.output}>
-          <h3 className={styles.subtitle}>Prompt généré :</h3>
-          <PromptField label="Format" value={prompt.format} onRegenerate={() => regeneratePromptField("format")} loading={regenLoading.format} />
-          <PromptField label="Thème" value={prompt.theme} onRegenerate={() => regeneratePromptField("theme")} loading={regenLoading.theme} />
-          <PromptField label="Contrainte" value={prompt.constraint} onRegenerate={() => regeneratePromptField("constraint")} loading={regenLoading.constraint} />
-          <div style={{ marginTop: 16, color: "#5fd26d" }}>
-            <b>Prompt final :</b> {prompt.fullPrompt}
-          </div>
+          <h3 className={styles.subtitle}>Idée</h3>
+          <p style={{ margin: 0 }}>{idea}</p>
         </div>
       )}
-
       {brief && (
         <div className={styles.output}>
-          <h3 className={styles.subtitle}>Brief associé</h3>
-          <BriefField label="Titre" value={brief.title} onRegenerate={() => regenerateBriefField("title")} loading={regenLoading.brief_title} />
-          <BriefField label="Objectif" value={brief.objective} onRegenerate={() => regenerateBriefField("objective")} loading={regenLoading.brief_objective} />
-          <BriefField label="Audience" value={brief.audience} onRegenerate={() => regenerateBriefField("audience")} loading={regenLoading.brief_audience} />
-          <BriefField label="Plateforme" value={brief.platform} onRegenerate={() => regenerateBriefField("platform")} loading={regenLoading.brief_platform} />
+          <h3 className={styles.subtitle}>Brief</h3>
+          <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{brief}</p>
         </div>
       )}
-    </div>
-  );
-}
-
-// Minimal pro field component
-function PromptField({ label, value, onRegenerate, loading }) {
-  return (
-    <div style={{ marginBottom: 8 }}>
-      <b>{label} :</b> <span>{value}</span>
-      <button onClick={onRegenerate} disabled={loading} className="button button-small" style={{ marginLeft: 10 }}>
-        {loading ? "..." : "Régénérer"}
-      </button>
     </div>
   );
 }

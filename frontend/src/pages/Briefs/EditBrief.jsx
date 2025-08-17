@@ -1,51 +1,44 @@
-// src/pages/Briefs/EditBrief.jsx
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BriefEditor from "../../components/brief/BriefEditor";
-import { AuthContext } from "../../context/AuthContext";
+import { authFetch } from "../../utils/authFetch";
 import toast from "react-hot-toast";
 
-/**
- * EditBrief page for editing and saving a brief with granular prompt control.
- */
 export default function EditBrief() {
   const { id } = useParams();
-  const { user } = useContext(AuthContext);
   const [brief, setBrief] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
 
-  // Load brief (and prompt) on mount
   useEffect(() => {
-    if (!user?.token) return;
-    fetch(`/api/brief/${id}`, {
-      headers: { "Authorization": `Bearer ${user.token}` }
-    })
-      .then(res => res.json())
-      .then(setBrief)
-      .catch(() => toast.error("Error loading brief"))
-      .finally(() => setLoading(false));
-  }, [id, user?.token]);
+    (async () => {
+      try {
+        const res = await authFetch(`${API_BASE}/api/brief/${id}`);
+        const data = await res.json();
+        setBrief(data);
+      } catch {
+        toast.error("Erreur lors du chargement du brief.");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [id, API_BASE]);
 
-  // Save handler passed to BriefEditor
   const handleSave = async (updatedBrief) => {
     try {
-      const res = await fetch(`/api/brief/${id}`, {
+      const res = await authFetch(`${API_BASE}/api/brief/${id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${user.token}`
-        },
-        body: JSON.stringify(updatedBrief)
+        body: JSON.stringify(updatedBrief),
       });
       if (!res.ok) throw new Error();
-      toast.success("Brief saved!");
+      toast.success("Brief sauvegardé !");
       navigate("/my-briefs");
     } catch {
-      toast.error("Error saving brief.");
+      toast.error("Erreur lors de la sauvegarde.");
     }
   };
 
-  if (loading || !brief) return <div>Loading…</div>;
+  if (loading || !brief) return <div>Chargement…</div>;
   return <BriefEditor initialBrief={brief} onSave={handleSave} />;
 }
