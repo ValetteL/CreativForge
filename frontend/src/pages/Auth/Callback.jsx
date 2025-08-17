@@ -12,7 +12,7 @@ export default function Callback() {
     const params = new URLSearchParams(search);
     const token = params.get("token");
     if (token) {
-      // Optionnel : décoder le token si tu veux plus de détails
+      // Store token in context and redirect to dashboard
       login({ token });
       navigate("/dashboard");
     } else {

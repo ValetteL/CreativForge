@@ -11,7 +11,7 @@ export default function BriefForm({ onBriefGenerated, brief }) {
       const res = await fetch(`${API_BASE}/api/prompt/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // Ici tu anticipes l'avenir : pour l'instant, prompt peut être vide
+        // send the prompt from the user
         body: JSON.stringify({ theme: prompt })
       });
       if (!res.ok) throw new Error("Erreur serveur");

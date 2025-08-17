@@ -4,7 +4,7 @@ import App from "./App";
 import "./index.css";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-// Mets ici ta vraie Client ID Google
+// Ensure the Google client ID is set in your environment variables
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
