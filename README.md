@@ -67,6 +67,7 @@ uvicorn main:app --reload --port 8001
 /backend : 
 
 dotnet restore
+dotnet ef migrations add InitialCreate_IdeaBrief
 dotnet ef database update
 dotnet run
 
