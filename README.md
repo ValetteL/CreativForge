@@ -58,10 +58,10 @@ ollama serve
 
 /ai : 
 
-cd ai
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
+cd ai 
+python -m venv venv \
+venv\Scripts\activate \
+pip install -r requirements.txt \
 uvicorn main:app --reload --port 8001
 
 /backend : 
